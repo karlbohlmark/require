@@ -134,12 +134,16 @@ Object.keys = (Object.keys || (function(o){
 				}else if(moduleStore.getModule(module).dependenciesResolved){
 					console.log('module ' + module + ' has all dependencies resolved')
 					setTimeout(function(){
+						if(promise.fulfilled)
+							return console.log('promise already fulfilled for module: ' + module)
 						promise.fulfill(evaluateDescriptor(moduleStore.getModule(module)));
 					},0);
 				}
 				else{
 					console.log('wait for dependencies for module ' + module);
 					moduleStore.getModule(module).onDependenciesResolved = function(){
+						if(promise.fulfilled)
+							return console.log('promise already fulfilled for module ' + module)
 						promise.fulfill(evaluateDescriptor(this));
 					}
 				}
